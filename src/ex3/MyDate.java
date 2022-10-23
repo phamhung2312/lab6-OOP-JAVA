@@ -4,8 +4,20 @@ public class MyDate {
     private int year;
     private int month;
     private int day;
-    String[] MONTHS = new String[]{"Jan", "Feb", "Mar", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"};
-    String[] DAYS = new String[]{"Saturday", "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday"};
+
+    public MyDate(int year, int month, int day) {
+        if (isValidDate(year,month,day)){
+            this.year = year;
+            this.month = month;
+            this.day = day;
+        }else {
+            System.out.println("Invalid year, month, or day!");
+        }
+
+    }
+
+    String[] MONTHS = new String[]{"Jan", "Feb", "Mar","Apr","May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"};
+    String[] DAYS = new String[]{ "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday","Saturday"};
     int[] DAYS_IN_MONTHS = new int[]{31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
 
     public boolean isLeapYear(int year) {
@@ -97,22 +109,25 @@ public class MyDate {
     public MyDate nextYear() {
         if(year==9999) throw new IllegalStateException("Year out of range");
         year++;
+        fixValidDate();
         return this;
     }
 
     public MyDate nextMonth() {
         if(month==12) {
-            month=0;
+            month=1;
             nextYear();
             return this;
         }
         month++;
+        fixValidDate();
         return this;
     }
 
     public MyDate nextDay() {
-        if(day==DAYS_IN_MONTHS[month-1]||(isLeapYear(year) && month == 2 && day == 29)) {
-            day=0;
+        int endOfMonth=(isLeapYear(year) && month == 2 )?DAYS_IN_MONTHS[month-1]+1:DAYS_IN_MONTHS[month-1];
+        if(day==endOfMonth) {
+            day=1;
             nextMonth();
             return this;
         }
@@ -123,16 +138,24 @@ public class MyDate {
     public MyDate previousYear() {
         if(year==1) throw new IllegalStateException("Year out of range");
         year--;
+        fixValidDate();
         return this;
     }
 
+    public void fixValidDate(){
+        if (!isValidDate(year,month,day)){
+            day--;
+        }
+    }
+
     public MyDate previousMonth() {
-        if(month==0) {
+        if(month==1) {
             month=12;
             previousYear();
             return this;
         }
         month--;
+        fixValidDate();
         return this;
     }
 
