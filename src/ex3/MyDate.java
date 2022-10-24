@@ -143,7 +143,7 @@ public class MyDate {
     }
 
     public void fixValidDate(){
-        if (!isValidDate(year,month,day)){
+        while (!isValidDate(year,month,day)){
             day--;
         }
     }
